@@ -24,8 +24,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/KohlsTechnology/prometheus_bigquery_remote_storage_adapter/bigquerydb"
-	"github.com/KohlsTechnology/prometheus_bigquery_remote_storage_adapter/pkg/version"
+	"github.com/voidshard/prometheus_bigquery_remote_storage_adapter/bigquerydb"
+	"github.com/voidshard/prometheus_bigquery_remote_storage_adapter/pkg/version"
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
 	"github.com/gogo/protobuf/proto"
