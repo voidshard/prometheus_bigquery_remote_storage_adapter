@@ -24,8 +24,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/voidshard/prometheus_bigquery_remote_storage_adapter/bigquerydb"
-	"github.com/voidshard/prometheus_bigquery_remote_storage_adapter/pkg/version"
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
 	"github.com/gogo/protobuf/proto"
@@ -35,6 +33,8 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/prometheus/common/promlog"
 	"github.com/prometheus/prometheus/prompb"
+	"github.com/voidshard/prometheus_bigquery_remote_storage_adapter/bigquerydb"
+	"github.com/voidshard/prometheus_bigquery_remote_storage_adapter/pkg/version"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
@@ -231,7 +231,7 @@ func buildClients(logger log.Logger, cfg *config) ([]writer, []reader) {
 
 func serve(logger log.Logger, addr string, writers []writer, readers []reader) error {
 	http.HandleFunc("/write", func(w http.ResponseWriter, r *http.Request) {
-		level.Debug(logger).Log("msg", "Request", "method", r.Method, "path", r.URL.Path)
+		level.Debug(logger).Log("msg", "Request", "method", r.Method, "path", r.URL.Path) //nolint:errcheck
 
 		begin := time.Now()
 		compressed, err := ioutil.ReadAll(r.Body)
@@ -274,7 +274,7 @@ func serve(logger log.Logger, addr string, writers []writer, readers []reader) e
 	})
 
 	http.HandleFunc("/read", func(w http.ResponseWriter, r *http.Request) {
-		level.Debug(logger).Log("msg", "Request", "method", r.Method, "path", r.URL.Path)
+		level.Debug(logger).Log("msg", "Request", "method", r.Method, "path", r.URL.Path) //nolint:errcheck
 
 		begin := time.Now()
 		compressed, err := ioutil.ReadAll(r.Body)
@@ -350,7 +350,7 @@ func sendSamples(logger log.Logger, w writer, timeseries []*prompb.TimeSeries) {
 		failedSamples.WithLabelValues(w.Name()).Add(float64(len(timeseries)))
 		writeErrors.Inc()
 	} else {
-		level.Debug(logger).Log("msg", "Sent samples", "num_samples", len(timeseries))
+		level.Debug(logger).Log("msg", "Sent samples", "num_samples", len(timeseries)) //nolint:errcheck
 		sentSamples.WithLabelValues(w.Name()).Add(float64(len(timeseries)))
 		sentBatchDuration.WithLabelValues(w.Name()).Observe(duration)
 	}
